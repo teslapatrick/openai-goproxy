@@ -120,7 +120,11 @@ func (n *Node) registerHandler() {
 				}()
 
 				ctx.SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
-					fmt.Printf("Time: %v\n[You]     %s\n[chatGPT] ", time.Now(), req.Messages[2].Content)
+					for _, msg := range req.Messages {
+						if msg.Role == "user" {
+							fmt.Printf("Time: %v\n[You]     %s\n[chatGPT] ", time.Now(), msg.Content)
+						}
+					}
 
 					go func() {
 						client.CreateCompletion(ctx, &req, func(r *chat.CreateCompletionStreamingResponse) {
