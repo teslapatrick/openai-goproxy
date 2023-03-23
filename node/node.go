@@ -101,6 +101,7 @@ func (n *Node) registerHandler() {
 				ctx.SetContentType("text/event-stream")
 				ctx.Response.Header.Set("Cache-Control", "no-cache")
 				ctx.Response.Header.Set("Connection", "keep-alive")
+				ctx.Response.Header.Set("X-Accel-Buffering", "no")
 				ctx.Response.Header.Set("Transfer-Encoding", "chunked")
 				ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
 				ctx.Response.Header.Set("Access-Control-Allow-Headers", "Cache-Control")
