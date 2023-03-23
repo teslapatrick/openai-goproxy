@@ -11,6 +11,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -88,14 +89,13 @@ func (s *Session) MakeStreamingRequest(ctx context.Context, endpoint string, inp
 
 	scanner := bufio.NewScanner(respBody)
 	for scanner.Scan() {
-		// line := strings.Replace(scanner.Text(), streamPrefix, "", 1)
-		line := scanner.Text()
+		line := strings.Replace(scanner.Text(), streamPrefix, "", 1)
 		if line == "" {
 			continue
 		}
-		// if line == streamEnd {
-		// 	return nil
-		// }
+		if line == streamEnd {
+			return nil
+		}
 		if err := json.Unmarshal([]byte(line), output); err != nil {
 			return fmt.Errorf("failed to unmarshal streaming response: %w", err)
 		}

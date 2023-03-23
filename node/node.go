@@ -119,11 +119,13 @@ func (n *Node) registerHandler() {
 				}()
 
 				ctx.SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
-					fmt.Printf("SSE SERVE HTTP %T\n", w)
+					fmt.Printf("Time: %v\n[You]     %s\n[chatGPT] ", time.Now(), req.Messages[2].Content)
+
 					go func() {
 						client.CreateCompletion(ctx, &req, func(r *chat.CreateCompletionStreamingResponse) {
 							d, _ := json.Marshal(r)
 							messageChan <- string(d)
+							fmt.Printf(r.Choices[0].Delta.Content)
 							if r.Choices[0].FinishReason == "stop" {
 								sessionDone <- struct{}{}
 							}
